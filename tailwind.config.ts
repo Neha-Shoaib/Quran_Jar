@@ -1,7 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
+    // This tells Tailwind to scan literally everywhere
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./lib/**/*.{js,ts,jsx,tsx,mdx}",
+    // Added uppercase fallbacks just in case!
+    "./Components/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
