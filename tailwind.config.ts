@@ -1,14 +1,7 @@
-import type { Config } from "tailwindcss";
-
-const config: Config = {
+/** @type {import('tailwindcss').Config} */
+module.exports = {
   content: [
-    // This wildcard tells Tailwind to scan EVERY file inside the src folder
-    "./src/**/*.{js,ts,jsx,tsx,mdx}", 
-    
-    // Fallbacks just in case
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./lib/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -33,4 +26,3 @@ const config: Config = {
   },
   plugins: [],
 };
-export default config;
