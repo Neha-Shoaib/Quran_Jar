@@ -1,7 +1,6 @@
-import { NextResponse } from 'next/server';
-import Groq from 'groq-sdk';
+import { NextResponse } from "next/server";
+import Groq from "groq-sdk";
 
-// Initialize Groq client securely on the server
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 });
@@ -10,45 +9,31 @@ export async function POST(req: Request) {
   try {
     const { emotion } = await req.json();
 
-    if (!emotion) {
-      return NextResponse.json({ error: 'Emotion is required' }, { status: 400 });
-    }
-
-    const prompt = `You are an Islamic scholar and an empathetic counselor. 
-    A user is feeling the emotion of "${emotion}". 
-    Find a highly relevant verse from the Quran that offers comfort, perspective, or guidance for this specific feeling.
-    
-    You MUST respond with a raw JSON object and nothing else. No markdown, no intro text.
-    Use this exact JSON structure:
+    const prompt = `You are a compassionate Islamic counselor. A user is feeling "${emotion}". 
+    Provide ONE relevant verse from the Quran that brings comfort or guidance for this specific emotion.
+    Respond ONLY with a raw JSON object (no markdown, no backticks) in this exact format:
     {
-      "surah": "Name of the Surah (e.g., Al-Baqarah)",
-      "ayatNumber": "Number of the Ayat (e.g., 2:286)",
-      "arabic": "The Arabic text of the Ayat",
-      "englishTranslation": "The authentic English translation",
-      "urduTranslation": "The authentic Urdu translation",
-      "advice": "A gentle, 2-sentence actionable advice connecting the verse to their current feeling of ${emotion}."
+      "arabic": "Arabic text of the verse",
+      "english": "English translation",
+      "urdu": "Urdu translation",
+      "reference": "Surah Name:Verse Number",
+      "advice": "One short, comforting sentence of practical advice based on the verse."
     }`;
 
     const completion = await groq.chat.completions.create({
-      messages: [{ role: 'user', content: prompt }],
-      model: 'openai/gpt-oss-120b',
-      response_format: { type: 'json_object' }, // Forces reliable JSON output
-      temperature: 0.7, // Adds slight variation so repeated emotions get different verses
+      messages: [{ role: "user", content: prompt }],
+      model: "openai/gpt-oss-120b",
+      temperature: 0.5,
     });
 
-    const responseContent = completion.choices[0]?.message?.content;
-    
-    if (!responseContent) {
-      throw new Error("No content generated");
-    }
+    const responseContent = completion.choices[0]?.message?.content || "{}";
+    const parsedData = JSON.parse(responseContent);
 
-    const verseData = JSON.parse(responseContent);
-    return NextResponse.json(verseData);
-
+    return NextResponse.json(parsedData);
   } catch (error) {
-    console.error('Error fetching verse:', error);
+    console.error("API Error:", error);
     return NextResponse.json(
-      { error: 'Failed to seek guidance. Please try again.' },
+      { error: "Failed to draw a verse. Please try again." },
       { status: 500 }
     );
   }
