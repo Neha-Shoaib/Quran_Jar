@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Digital Quran Jar",
-  description: "A peaceful, magical web application providing Quranic verses and comforting advice based on your current emotional state.",
+  description: "Find peace and guidance through Quranic verses based on your emotions.",
 };
 
 export default function RootLayout({
@@ -14,7 +14,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased min-h-screen relative font-sans">
-        {/* Ambient starry/twilight overlay */}
         <div className="fixed inset-0 pointer-events-none opacity-40 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-700/20 via-slate-900/10 to-transparent z-0" />
         {children}
       </body>
