@@ -89,9 +89,8 @@ const jarContents = Array.from({ length: totalChits }).map((_, i) => {
               className={`absolute w-10 h-12 rounded-sm shadow-md border border-white/30 flex items-center justify-center transform transition-all ${isOpen ? 'hover:scale-125 hover:z-50 cursor-pointer hover:shadow-[0_0_20px_rgba(255,255,255,0.8)]' : 'cursor-default'}`}
               style={{ backgroundColor: chit.color, left: chit.left }}
               animate={{ 
-                y: isOpen ? [0, -15, 0] : [0, -5, 0],
-                rotate: isOpen ? [-10, 10, -10] : [-3, 3, -3],
-                bottom: `${(chit.id % 5) * 18}%` 
+                y: isOpen ? [0, -4, 0] : [0, -2, 0],
+                rotate: [chit.initialRotate, chit.initialRotate + 4, chit.initialRotate]
               }}
               transition={{
                 duration: chit.duration,
