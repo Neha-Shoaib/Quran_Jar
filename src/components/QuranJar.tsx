@@ -13,18 +13,29 @@ interface QuranJarProps {
 
 export default function QuranJar({ jarState, setJarState, onDraw }: QuranJarProps) {
   const emotions = Object.keys(emotionColors);
+  const totalChits = 150;
   
-  const jarContents = Array.from({ length: 80 }).map((_, i) => ({
-    id: i,
-    emotion: emotions[i % emotions.length],
-    color: emotionColors[emotions[i % emotions.length]],
-    left: `${Math.random() * 80 + 10}%`,
-    delay: Math.random() * 3,
-    // Drastically slowed down the movement (was 2 to 4 seconds, now 5 to 9 seconds)
-    duration: Math.random() * 4 + 5, 
-    initialRotate: Math.random() * 360,
-  }));
+const jarContents = Array.from({ length: totalChits }).map((_, i) => {
+    const emotionIndex = (i * 7) % emotions.length; 
+    
+    const row = Math.floor(i / 10); // 15 rows (0 to 14)
+    const col = i % 10; // 10 columns (0 to 9)
 
+    const leftPos = (col / 9) * 70 + 10 + (Math.random() * 4 - 2);
+    
+    const bottomPos = (row / 14) * 73 + 2 + (Math.random() * 3);
+
+    return {
+      id: i,
+      emotion: emotions[emotionIndex],
+      color: emotionColors[emotions[emotionIndex]],
+      left: `${leftPos}%`,
+      bottom: `${bottomPos}%`,
+      delay: Math.random() * 4,
+      duration: Math.random() * 4 + 6, // بہت سلو موومنٹ
+      initialRotate: Math.random() * 360,
+    };
+  });
   const isOpen = jarState === "open";
 
   return (
