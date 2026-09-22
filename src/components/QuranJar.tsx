@@ -90,7 +90,6 @@ export default function QuranJar({ jarState, setJarState, onDraw }: QuranJarProp
               onClick={(e) => {
                 e.stopPropagation();
                 if (isOpen) {
-                  playSound('draw');
                   onDraw(chit.emotion);
                 }
               }}
