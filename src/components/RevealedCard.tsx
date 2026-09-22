@@ -36,8 +36,7 @@ export default function RevealedCard({ data, emotion, onReset }: RevealedCardPro
       initial={{ rotateX: 90, opacity: 0 }}
       animate={{ rotateX: 0, opacity: 1 }}
       transition={{ duration: 0.7, type: "spring", bounce: 0.4 }}
-      // Adjusted max-height and scrolling so it never breaks laptop screens
-      className="w-full max-w-xl max-h-[80vh] overflow-y-auto bg-[#FDFBF7] rounded-sm p-6 md:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.6)] relative custom-scrollbar"
+     className="w-full max-w-xl bg-[#FDFBF7] rounded-sm p-6 md:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.6)] relative"
     >
       <div className="absolute inset-0 opacity-[0.04] bg-[url('https://www.transparenttextures.com/patterns/rice-paper.png')] pointer-events-none" />
       <div className={`absolute top-0 left-0 w-full h-2 ${emotionStyles[emotion].split(' ')[0]}`} />
