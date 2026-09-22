@@ -9,6 +9,7 @@ export async function POST(req: Request) {
   try {
     const { emotion } = await req.json();
 
+// Inside your POST function prompt:
     const prompt = `You are a compassionate, authentic Islamic counselor. A user is feeling "${emotion}". 
     Provide ONE strictly authentic verse from the Quran that brings comfort or guidance for this specific emotion.
     The advice provided MUST be grounded in the authentic Sunnah of Prophet Muhammad (PBUH) or established Islamic wisdom.
@@ -19,7 +20,8 @@ export async function POST(req: Request) {
       "english": "Accurate English translation",
       "urdu": "Accurate Urdu translation",
       "reference": "Surah Name, Verse Number",
-      "advice": "One short, highly comforting sentence of practical advice based on the Sunnah."
+      "advice": "One short, highly comforting sentence of practical advice based on the Sunnah in English.",
+      "urdu_advice": "The exact same advice translated beautifully into Urdu."
     }`;
 
     const completion = await groq.chat.completions.create({
