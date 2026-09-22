@@ -14,7 +14,7 @@ interface QuranJarProps {
 export default function QuranJar({ jarState, setJarState, onDraw }: QuranJarProps) {
   const emotions = Object.keys(emotionColors);
   
-  const jarContents = Array.from({ length: 40 }).map((_, i) => ({
+  const jarContents = Array.from({ length: 80 }).map((_, i) => ({
     id: i,
     emotion: emotions[i % emotions.length],
     color: emotionColors[emotions[i % emotions.length]],
@@ -22,6 +22,7 @@ export default function QuranJar({ jarState, setJarState, onDraw }: QuranJarProp
     delay: Math.random() * 3,
     // Drastically slowed down the movement (was 2 to 4 seconds, now 5 to 9 seconds)
     duration: Math.random() * 4 + 5, 
+    initialRotate: Math.random() * 360,
   }));
 
   const isOpen = jarState === "open";
