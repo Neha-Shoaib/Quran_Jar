@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { emotionColors } from "@/lib/data";
 import type { JarState } from "@/app/page";
+import { playSound } from "@/lib/sounds";
 
 interface QuranJarProps {
   jarState: JarState;
@@ -39,7 +40,10 @@ export default function QuranJar({ jarState, setJarState, onDraw }: QuranJarProp
         transition={{ type: "spring", bounce: 0.5, duration: 1 }}
         onClick={(e) => {
           e.stopPropagation();
-          if (!isOpen) setJarState("open");
+          if (!isOpen) {
+            playSound('glass');
+            setJarState("open");
+          }
         }}
       >
         <div className="w-full h-2 bg-black/20 absolute bottom-0 rounded-b-lg" />
@@ -77,7 +81,10 @@ export default function QuranJar({ jarState, setJarState, onDraw }: QuranJarProp
               }}
               onClick={(e) => {
                 e.stopPropagation();
-                if (isOpen) onDraw(chit.emotion);
+                if (isOpen){
+                  playSound('draw');
+                  onDraw(chit.emotion);
+                }
               }}
             >
               {/* Fold lines to make it look like folded paper */}
