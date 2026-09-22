@@ -13,33 +13,22 @@ interface QuranJarProps {
 
 export default function QuranJar({ jarState, setJarState, onDraw }: QuranJarProps) {
   const emotions = Object.keys(emotionColors);
-  const totalChits = 150;
   
-const jarContents = Array.from({ length: totalChits }).map((_, i) => {
-    const emotionIndex = (i * 7) % emotions.length; 
-    
-    const row = Math.floor(i / 10); // 15 rows (0 to 14)
-    const col = i % 10; // 10 columns (0 to 9)
+  // FIX: Chits ki tadad 40 se 80 kar di gayi hai taake jar bhara hua lagay
+  const jarContents = Array.from({ length: 80 }).map((_, i) => ({
+    id: i,
+    emotion: emotions[i % emotions.length],
+    color: emotionColors[emotions[i % emotions.length]],
+    left: `${Math.random() * 80 + 10}%`,
+    delay: Math.random() * 3,
+    duration: Math.random() * 4 + 5, 
+    // Random rotation for a messy, natural look inside the jar
+    initialRotate: Math.random() * 360,
+  }));
 
-    const leftPos = (col / 9) * 70 + 10 + (Math.random() * 4 - 2);
-    
-    const bottomPos = (row / 14) * 73 + 2 + (Math.random() * 3);
-
-    return {
-      id: i,
-      emotion: emotions[emotionIndex],
-      color: emotionColors[emotions[emotionIndex]],
-      left: `${leftPos}%`,
-      bottom: `${bottomPos}%`,
-      delay: Math.random() * 4,
-      duration: Math.random() * 4 + 6, // بہت سلو موومنٹ
-      initialRotate: Math.random() * 360,
-    };
-  });
   const isOpen = jarState === "open";
 
   return (
-    // Scaled down dimensions for laptop screens (w-56, h-[320px])
     <div className="relative w-56 h-[320px] md:w-64 md:h-[350px] flex flex-col items-center justify-end mt-8 cursor-pointer group">
       
       <div className={`absolute bottom-0 w-64 h-64 bg-amber-500/20 blur-[80px] rounded-full transition-opacity duration-1000 ${isOpen ? 'opacity-100' : 'opacity-40'}`} />
@@ -58,7 +47,6 @@ const jarContents = Array.from({ length: totalChits }).map((_, i) => {
           }
         }}
       >
-        {/* Cork texture rings */}
         <div className="w-full h-1 bg-black/20 absolute top-2" />
         <div className="w-full h-1 bg-black/20 absolute top-6" />
         <div className="w-full h-3 bg-black/40 absolute bottom-0" />
@@ -79,24 +67,30 @@ const jarContents = Array.from({ length: totalChits }).map((_, i) => {
       >
         {/* Primary Glass Reflection */}
         <div className="absolute top-2 left-2 w-10 h-[90%] bg-gradient-to-b from-white/30 to-transparent rounded-full blur-[2px] transform -rotate-6 pointer-events-none" />
-        {/* Secondary Edge Reflection */}
         <div className="absolute top-10 right-2 w-3 h-1/2 bg-white/20 rounded-full blur-[1px] pointer-events-none" />
 
-        <div className="absolute bottom-4 left-0 w-full h-[80%] p-5 relative">
+        {/* The Chits Inside */}
+        <div className="absolute bottom-2 left-0 w-full h-[85%] p-4 relative">
           {jarContents.map((chit) => (
             <motion.div
               key={chit.id}
               className={`absolute w-10 h-12 rounded-sm shadow-md border border-white/30 flex items-center justify-center transform transition-all ${isOpen ? 'hover:scale-125 hover:z-50 cursor-pointer hover:shadow-[0_0_20px_rgba(255,255,255,0.8)]' : 'cursor-default'}`}
-              style={{ backgroundColor: chit.color, left: chit.left }}
+              style={{ 
+                backgroundColor: chit.color, 
+                left: chit.left,
+                // Make them stack nicely at the bottom
+                bottom: `${(chit.id % 8) * 11}%`, 
+                zIndex: chit.id 
+              }}
               animate={{ 
-                y: isOpen ? [0, -4, 0] : [0, -2, 0],
-                rotate: [chit.initialRotate, chit.initialRotate + 4, chit.initialRotate]
+                y: isOpen ? [0, -15, 0] : [0, -5, 0],
+                rotate: isOpen ? [chit.initialRotate, chit.initialRotate + 15, chit.initialRotate] : [chit.initialRotate, chit.initialRotate + 5, chit.initialRotate]
               }}
               transition={{
                 duration: chit.duration,
                 delay: chit.delay,
                 repeat: Infinity,
-                ease: "easeInOut" // Smooth floating
+                ease: "easeInOut" 
               }}
               onClick={(e) => {
                 e.stopPropagation();
