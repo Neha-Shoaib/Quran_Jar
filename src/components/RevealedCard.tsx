@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { emotionStyles } from "@/lib/data";
 import { Sparkles, ArrowLeft } from "lucide-react";
+import { playSound } from "@/lib/sounds";
 
 interface RevealedCardProps {
   data: any;
@@ -11,7 +13,12 @@ interface RevealedCardProps {
 }
 
 export default function RevealedCard({ data, emotion, onReset }: RevealedCardProps) {
-  
+
+  useEffect(() => {
+    if (data) {
+      playSound('paper');
+    }
+  }, [data]);
   if (!data) {
     return (
       <div className="flex flex-col items-center justify-center h-96 gap-6">
