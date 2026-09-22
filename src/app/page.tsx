@@ -1,94 +1,62 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { emotionsData, Emotion, Verse } from "@/lib/data";
 import Legend from "@/components/Legend";
 import QuranJar from "@/components/QuranJar";
 import RevealedCard from "@/components/RevealedCard";
 
 export default function Home() {
-  const [activeGlow, setActiveGlow] = useState<string>("transparent");
-  const [selectedEmotion, setSelectedEmotion] = useState<Emotion | null>(null);
-  const [selectedVerse, setSelectedVerse] = useState<Verse | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [selectedEmotion, setSelectedEmotion] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [verseData, setVerseData] = useState<any>(null);
 
-  const handleDrawChit = async (emotion: Emotion) => {
+  const handleEmotionSelect = async (emotion: string) => {
     setSelectedEmotion(emotion);
-    setActiveGlow(emotion.hex);
     setIsLoading(true);
-    setSelectedVerse(null); // Clear previous verse
+    setVerseData(null);
 
     try {
-      const response = await fetch('/api/draw', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ emotion: emotion.name }),
+      const response = await fetch("/api/draw", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ emotion }),
       });
-
-      if (!response.ok) throw new Error('Network response was not ok');
-      
-      const data: Verse = await response.json();
-      setSelectedVerse(data);
+      const data = await response.json();
+      setVerseData(data);
     } catch (error) {
-      console.error("Failed to fetch verse:", error);
-      // Fallback verse in case the API hits a limit or fails
-      setSelectedVerse({
-        surah: "Ash-Sharh",
-        ayatNumber: "94:5",
-        arabic: "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا",
-        englishTranslation: "For indeed, with hardship [will be] ease.",
-        urduTranslation: "پس بے شک ہر مشکل کے ساتھ آسانی ہے۔",
-        advice: "Take a deep breath. Even in this moment, ease is traveling alongside you."
-      });
+      console.error("Error fetching verse:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleDismiss = () => {
-    setSelectedEmotion(null);
-    setSelectedVerse(null);
-    setActiveGlow("transparent");
-    setIsLoading(false);
-  };
-
   return (
-    <motion.main
-      className="relative min-h-screen w-full flex flex-col md:flex-row items-center justify-center p-6 gap-12 transition-colors duration-1000 ease-in-out"
-      animate={{
-        backgroundColor: activeGlow !== "transparent" ? `${activeGlow}15` : "transparent"
-      }}
-    >
-      <motion.div
-        className="fixed inset-0 pointer-events-none blur-[120px] opacity-30 z-0 transition-colors duration-1000"
-        animate={{ backgroundColor: activeGlow }}
-      />
-
-      <div className="z-10 flex flex-col md:flex-row items-center justify-center w-full max-w-6xl gap-12 md:gap-24">
-        <div className="relative w-full max-w-sm flex items-center justify-center">
-          <QuranJar 
-            emotions={emotionsData} 
-            onDraw={handleDrawChit} 
-            isCardOpen={!!selectedEmotion}
-          />
+    <main className="min-h-screen flex flex-col items-center justify-center p-4 md:p-8 relative z-10">
+      <div className="glass-panel w-full max-w-5xl p-8 rounded-3xl flex flex-col items-center gap-8 border border-white/10 bg-white/5 backdrop-blur-lg shadow-2xl">
+        
+        <div className="text-center space-y-2">
+          <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight">Digital Quran Jar</h1>
+          <p className="text-slate-300 max-w-xl mx-auto">
+            Select how you are feeling right now to draw a verse of comfort and guidance.
+          </p>
         </div>
 
-        <div className="w-full max-w-sm">
-          <Legend emotions={emotionsData} />
+        <div className="flex flex-col md:flex-row w-full gap-12 items-center justify-center mt-4">
+          <div className="w-full md:w-1/3">
+            <Legend onSelect={handleEmotionSelect} />
+          </div>
+          <div className="w-full md:w-1/3 flex justify-center min-h-[400px]">
+            <QuranJar activeEmotion={selectedEmotion} isLoading={isLoading} />
+          </div>
         </div>
-      </div>
 
-      <AnimatePresence>
-        {selectedEmotion && (
-          <RevealedCard
-            emotion={selectedEmotion}
-            verse={selectedVerse}
-            isLoading={isLoading}
-            onClose={handleDismiss}
-          />
+        {verseData && (
+          <div className="w-full max-w-3xl mt-8">
+            <RevealedCard data={verseData} emotion={selectedEmotion!} />
+          </div>
         )}
-      </AnimatePresence>
-    </motion.main>
+
+      </div>
+    </main>
   );
 }
