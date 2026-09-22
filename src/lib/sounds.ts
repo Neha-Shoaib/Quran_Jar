@@ -9,9 +9,22 @@ export const playSound = (type: 'glass' | 'draw' | 'paper') => {
   };
 
   const audio = new Audio(soundPaths[type]);
-  audio.volume = 0.4; // Keep it subtle and ambient
+  audio.volume = type === 'paper' ? 0.3 : 0.5; // Keep it subtle and ambient
   
   audio.play().catch((err) => {
     console.log("Audio requires user interaction first:", err);
   });
+  if (type === 'paper') {
+    setTimeout(() => {
+      let fadeOut = setInterval(() => {
+        if (audio.volume > 0.05) {
+          audio.volume -= 0.05;
+        } else {
+          clearInterval(fadeOut);
+          audio.pause();
+          audio.currentTime = 0;
+        }
+      }, 50);
+    }, 1500); 
+  }
 };
