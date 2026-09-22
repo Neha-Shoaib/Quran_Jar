@@ -4,6 +4,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Digital Quran Jar",
   description: "Find peace and guidance through Quranic verses based on your emotions.",
+icons: {
+    icon: "/icon.png",
+  },
 };
 
 export default function RootLayout({
