@@ -14,9 +14,9 @@ interface RevealedCardProps {
 
 export default function RevealedCard({ data, emotion, onReset }: RevealedCardProps) {
   
-  useEffect(() => {
-    if (data) playSound('paper');
-  }, [data]);
+useEffect(() => {
+    playSound('paper');
+  }, []);
 
   if (!data) {
     return (
